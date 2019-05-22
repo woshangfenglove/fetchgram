@@ -9,6 +9,8 @@ from django.views.generic.edit import FormView
 from django.views.generic.base import TemplateView
 
 
+from django.shortcuts import redirect
+
 class FormPageView(FormView):
 
     template_name = 'download/index.html'
@@ -44,13 +46,22 @@ class DownloadPageView(TemplateView):
         post = self.get_record()
 
         if post:
-            self.image_url = self.get_url(post)
+            self.file_url, self.post_type = self.get_url(post)
         else:
-            self.image_url = None
+            self.file_url, self.post_type = (None, None)
+
+    def dispatch(self, request, *args, **kwargs):
+        """Redirect if no post in database match the session id."""
+
+        if not self.file_url:
+            return redirect('form-page')
+
+        return super(DownloadPageView, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['image_url'] = self.image_url
+        context['file_url'] = self.file_url
+        context['post_type'] = self.post_type
         return context
 
     def get_record(self):
@@ -72,6 +83,14 @@ class DownloadPageView(TemplateView):
         html = requests.get(post_url).text
         soup = BeautifulSoup(html, 'html.parser')
         data = json.loads(soup.select("script[type='text/javascript']")[3].text[21:-1])
-        image_url = data["entry_data"]["PostPage"][0]["graphql"]["shortcode_media"]["display_url"]
+        post_type = data["entry_data"]["PostPage"][0]["graphql"]["shortcode_media"]["__typename"]
 
-        return image_url
+        if post_type == "GraphVideo":
+            image_url = data["entry_data"]["PostPage"][0]["graphql"]["shortcode_media"]["video_url"]
+        elif post_type == "GraphImage":
+            image_url = data["entry_data"]["PostPage"][0]["graphql"]["shortcode_media"]["display_url"]
+        elif post_type == "GraphSidecar":
+            edges = data["entry_data"]["PostPage"][0]["graphql"]["shortcode_media"]["edge_sidecar_to_children"]["edges"]
+            image_url = [edge["node"]["display_url"] for edge in edges]
+
+        return image_url, post_type
