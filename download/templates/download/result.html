@@ -1,17 +1,28 @@
 {% extends 'download/base.html' %}
 
 {% block content %}
+
   {% if post_type == "GraphImage" %}
     <img src="{{ file_url }}" style="width:50%; height:50%;" alt="">
+
   {% elif post_type == "GraphVideo" %}
     <video width="320" height="240" controls>
       <source src="{{ file_url }}" type="video/mp4">
       Your browser does not support the video tag.
     </video>
+
   {% elif post_type == "GraphSidecar" %}
     {% for file in file_url %}
-      <img src="{{ file }}" style="width:50%; height:50%;" alt="">
+      {% if ".jpg" in file %}
+        <img src="{{ file }}" style="width:50%; height:50%;" alt="">
+      {% elif ".mp4" in file %}
+        <video width="320" height="240" controls>
+          <source src="{{ file }}" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      {% endif %}
     {% endfor %}
   {% else %}
   {% endif %}
+
 {% endblock %}

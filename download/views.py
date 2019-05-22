@@ -91,6 +91,8 @@ class DownloadPageView(TemplateView):
             image_url = data["entry_data"]["PostPage"][0]["graphql"]["shortcode_media"]["display_url"]
         elif post_type == "GraphSidecar":
             edges = data["entry_data"]["PostPage"][0]["graphql"]["shortcode_media"]["edge_sidecar_to_children"]["edges"]
-            image_url = [edge["node"]["display_url"] for edge in edges]
+            # Differentiate between images and videos in multi-content posts.
+            # Get urls with .jpg for images and .mp4 for videos.
+            image_url = [edge["node"]["video_url"] if edge["node"]["__typename"] == "GraphVideo" else edge["node"]["display_url"] for edge in edges]
 
         return image_url, post_type
