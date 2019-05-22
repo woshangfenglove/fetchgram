@@ -1,67 +1,77 @@
-from django.contrib import messages
-from django.urls import reverse
-from django.http import HttpResponseRedirect
-from django.shortcuts import render
-from django.core.exceptions import ObjectDoesNotExist
-
-from . import forms
-from . import models
-
 import uuid
 import json
 import requests
+from download.forms import PostForm
+from download.models import PostModel
 from bs4 import BeautifulSoup
+from django.core.exceptions import ObjectDoesNotExist
+from django.views.generic.edit import FormView
+from django.views.generic.base import TemplateView
 
-def index(request):
 
-    session_id = None
+class FormPageView(FormView):
 
-    if request.method == 'POST':
+    template_name = 'download/index.html'
+    form_class = PostForm
+    success_url = '/download/'
 
+    def form_valid(self, form):
+        id = self.session_data()
+        form.save(id)
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+    def session_data(self):
+        session_id = None
         if session_id == None:
             id = uuid.uuid4()
-            session_id = request.session.get('session_id', 0)
-            request.session['session_id'] = str(id)
+            session_id = self.request.session.get('session_id', 0)
+            self.request.session['session_id'] = str(id)
+        return id
 
-        form = forms.PostForm(request.POST)
-        if form.is_valid():
-            form.save(id)
-            return HttpResponseRedirect(reverse('download-page'))
+
+class DownloadPageView(TemplateView):
+    """The download page that the instagram post will show up on."""
+
+    template_name = 'download/result.html'
+
+    def setup(self, request, *args, **kwargs):
+        super().setup(request, *args, **kwargs)
+
+        post = self.get_record()
+
+        if post:
+            self.image_url = self.get_url(post)
         else:
-            messages.error(request, "Error")
+            self.image_url = None
 
-    context = {
-        'form': forms.PostForm(),
-        'id': session_id,
-    }
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['image_url'] = self.image_url
+        return context
 
-    return render(request, 'download/index.html', context)
+    def get_record(self):
+        """Get the latest record that match the current session."""
 
+        session_id = self.request.session.get('session_id', 0)
 
-def result(request):
+        # Try to get the post from the database.
+        try:
+            db_record = PostModel.objects.get(id__exact=session_id)
+        except ObjectDoesNotExist:
+            return None
 
-    session_id = request.session.get('session_id', 0)
-    try:
-        image = models.PostModel.objects.get(id__exact=session_id)
-        image_id = str(image.id)
-    except ObjectDoesNotExist:
-        image = None
-        image_id = None
+        return db_record
 
-    image_url = None
-
-    if session_id == image_id:
-        print("worked????")
-        url = image.post_url
-        html = requests.get(url).text
+    def get_url(self, db_record):
+        """Get the url to the image in the post."""
+        post_url = db_record.post_url
+        html = requests.get(post_url).text
         soup = BeautifulSoup(html, 'html.parser')
         data = json.loads(soup.select("script[type='text/javascript']")[3].text[21:-1])
         image_url = data["entry_data"]["PostPage"][0]["graphql"]["shortcode_media"]["display_url"]
 
-    context = {
-        'image_url': image_url,
-        'image_id': image_id,
-        'session_id': session_id,
-    }
-
-    return render(request, 'download/result.html', context)
+        return image_url
