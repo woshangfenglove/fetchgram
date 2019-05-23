@@ -48,7 +48,7 @@ class PostForm(ModelForm):
 
     def _remove_utm_code(self, url):
         """Remove tracking code from url."""
-        pattern = "^http[s]*\:\/+www.instagram.com\/[a-z]\/[A-Za-z\W]+\/"
+        pattern = "^http[s]*\:\/+www.instagram.com\/[a-z]\/[A-Za-z0-9\W]+\/"
         match = re.match(pattern, url)
 
         return match
