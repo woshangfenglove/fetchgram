@@ -4,12 +4,11 @@ import requests
 from download.forms import PostForm
 from download.models import PostModel
 from bs4 import BeautifulSoup
+from django.shortcuts import redirect
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.generic.edit import FormView
 from django.views.generic.base import TemplateView
 
-
-from django.shortcuts import redirect
 
 class FormPageView(FormView):
 
