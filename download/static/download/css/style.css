@@ -5,13 +5,13 @@
   align-items: center;
 }
 
-.flex-container > div {
+.flex-container > div > a {
   padding: 0.5em;
   display: flex;
   justify-content: center;
 }
 
-.flex-container > div > img, .flex-container > div > video {
+.flex-container > div > a > img, .flex-container > div > video {
   width: 30%;
   height: auto;
 }

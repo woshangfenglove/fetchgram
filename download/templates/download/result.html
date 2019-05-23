@@ -7,13 +7,17 @@
 
   {% if post_type == "GraphImage" %}
   <div>
-    <img src="{{ file_url }}" alt="">
+    <a href="{{ file_url }}">
+      <img src="{{ file_url }}" alt="">
+    </a>
   </div>
 
   {% elif post_type == "GraphVideo" %}
   <div>
     <video controls>
-      <source src="{{ file_url }}" type="video/mp4">
+      <a href="{{ file_url }}">
+        <source src="{{ file_url }}" type="video/mp4">
+      </a>
       Your browser does not support the video tag.
     </video>
   </div>
@@ -22,10 +26,14 @@
     {% for file in file_url %}
       <div>
         {% if ".jpg" in file %}
-          <img src="{{ file }}" alt="">
+          <a href="{{ file }}">
+            <img src="{{ file }}" alt="">
+          </a>
         {% elif ".mp4" in file %}
           <video controls>
-            <source src="{{ file }}" type="video/mp4">
+            <a href="{{ file }}">
+              <source src="{{ file }}" type="video/mp4">
+            </a>
             Your browser does not support the video tag.
           </video>
         {% endif %}
