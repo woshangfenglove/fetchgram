@@ -41,11 +41,9 @@ class DownloadPageView(TemplateView):
 
     def setup(self, request, *args, **kwargs):
         super().setup(request, *args, **kwargs)
-
-        post = self.get_record()
-
+        post = self._get_record()
         if post:
-            self.file_url, self.post_type = self.get_url(post)
+            self.file_url, self.post_type = self._get_data(post)
         else:
             self.file_url, self.post_type = (None, None)
 
@@ -63,11 +61,9 @@ class DownloadPageView(TemplateView):
         context['post_type'] = self.post_type
         return context
 
-    def get_record(self):
+    def _get_record(self):
         """Get the latest record that match the current session."""
-
         session_id = self.request.session.get('session_id', 0)
-
         # Try to get the post from the database.
         try:
             db_record = PostModel.objects.get(id__exact=session_id)
@@ -76,8 +72,8 @@ class DownloadPageView(TemplateView):
 
         return db_record
 
-    def get_url(self, db_record):
-        """Get the url to the image in the post."""
+    def _get_data(self, db_record):
+        """Returns the file URLs and the post type."""
         post_url = db_record.post_url
         html = requests.get(post_url).text
         soup = BeautifulSoup(html, 'html.parser')
