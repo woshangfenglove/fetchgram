@@ -4,6 +4,7 @@ from django.forms import ModelForm, ValidationError
 from django.utils.translation import gettext_lazy as _
 from .models import PostModel
 
+
 class PostForm(ModelForm):
 
     class Meta:

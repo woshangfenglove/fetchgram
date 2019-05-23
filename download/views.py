@@ -27,7 +27,7 @@ class FormPageView(FormView):
 
     def session_data(self):
         session_id = None
-        if session_id == None:
+        if session_id is None:
             id = uuid.uuid4()
             session_id = self.request.session.get('session_id', 0)
             self.request.session['session_id'] = str(id)
