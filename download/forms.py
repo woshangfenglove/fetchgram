@@ -32,7 +32,7 @@ class PostForm(ModelForm):
     def _valid_url(self, url):
         """Make sure it is a working instagram url."""
         if not bool(url):
-            raise ValidationError("Not an url to an instagram post.")
+            raise ValidationError("That's not an instagram post.")
         if not self._url_exists(url.group()):
             raise ValidationError("The page does not exist.")
 

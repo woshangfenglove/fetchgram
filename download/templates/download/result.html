@@ -1,25 +1,21 @@
 {% extends 'download/base.html' %}
 
 {% block content %}
-  <div>
-    <h1>RESULT</h1>
-  </div>
-
   {% if post_type == "GraphImage" %}
   <div>
     <a href="{{ file_url }}">
       <img src="{{ file_url }}" alt="">
     </a>
+    <button class="button button"><a href="{{ file_url }}">DOWNLOAD</a></button>
   </div>
 
   {% elif post_type == "GraphVideo" %}
   <div>
     <video controls>
-      <a href="{{ file_url }}">
-        <source src="{{ file_url }}" type="video/mp4">
-      </a>
+      <source src="{{ file_url }}" type="video/mp4">
       Your browser does not support the video tag.
     </video>
+    <button class="button button"><a href="{{ file_url }}">DOWNLOAD</a></button>
   </div>
 
   {% elif post_type == "GraphSidecar" %}
@@ -29,13 +25,13 @@
           <a href="{{ file }}">
             <img src="{{ file }}" alt="">
           </a>
+          <button class="button button"><a href="{{ file }}"><span>DOWNLOAD </span><i class="fa fa-download" aria-hidden="true"></i></a></button>
         {% elif ".mp4" in file %}
           <video controls>
-            <a href="{{ file }}">
-              <source src="{{ file }}" type="video/mp4">
-            </a>
+            <source src="{{ file }}" type="video/mp4">
             Your browser does not support the video tag.
           </video>
+          <button class="button button"><a href="{{ file }}">DOWNLOAD</a></button>
         {% endif %}
       </div>
     {% endfor %}

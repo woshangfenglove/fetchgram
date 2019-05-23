@@ -1,22 +1,128 @@
+body {
+  background-image: linear-gradient(to right, #0063B2FF, #9CC3D5FF);
+  color: white;
+  font-family: 'Roboto', sans-serif;
+}
+
+h1 {
+  color: white;
+  font-family: 'Baloo Bhai', cursive;
+  font-size: 500%;
+  margin: 0;
+  text-shadow: 5px 5px 5px #555753;
+}
+
+input {
+  display: block;
+  margin: auto;
+}
+
+/* Flex container */
+
 .flex-container {
+  margin-top: 3em;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
-.flex-container > div > a {
+.flex-container > div > a, .flex-container > div {
   padding: 0.5em;
   display: flex;
+  flex-direction: column;
+  align-items: stretch;
   justify-content: center;
 }
 
 .flex-container > div > a > img, .flex-container > div > video {
-  width: 30%;
+  width: 25em;
   height: auto;
+  border-radius: 1em;
+  box-shadow: 10px 10px 10px #555753;
 }
 
-input {
+/* Navigation bar */
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  overflow: hidden;
+  background-color: #333;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+li {
+  float: left;
+}
+
+li a {
   display: block;
-  margin: auto;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  transition-duration: 0.5s;
+}
+
+li a:hover {
+  background-color: #111;
+}
+
+/* Download buttons */
+
+.button {
+  transition-duration: 0.5s;
+  background-color: #008C76FF;
+  border: 2px solid #9ED9CCFF;
+  border-radius: 0.5em;
+  padding: 0.3em 1em;
+  margin: 4px 2px;
+  color: #9ED9CCFF;
+}
+
+.button > a {
+  color: #9ED9CCFF;
+  text-decoration: none;
+}
+
+.button > * > span {
+  font-weight: bold;
+}
+
+button[type=submit] {
+  float: none;
+  display: block;
+  width: 100px;
+  margin: 10px auto;
+}
+
+/* Form */
+
+input[type=url] {
+  width: 40em;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 0.5em;
+  background-color: white;
+  background-image: url('../images/searchicon.png');
+  background-position: 10px 13px;
+  background-repeat: no-repeat;
+  padding: 12px 20px 12px 40px;
+  -webkit-transition: width 0.4s ease-in-out;
+  transition: width 0.4s ease-in-out;
+}
+
+.errorlist {
+  position: relative;
+  top: 0.5em;
+  left: 10em;
+  background-color: transparent;
+  color: #93385FFF;
+  font-weight: bold;
+  text-align: center;
 }

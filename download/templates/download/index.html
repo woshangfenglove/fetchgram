@@ -2,13 +2,16 @@
 
 {% block content %}
     <div>
-      <h1>START</h1>
+      <p>Download photos and videos from Instagram.</p>
     </div>
     <div>
       <form action="" method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <input type="submit" value="Submit">
+
+        <button class="button button" type="submit">
+          <i class="fa fa-download" aria-hidden="true"></i>
+        </button>
       </form>
     </div>
 {% endblock %}
