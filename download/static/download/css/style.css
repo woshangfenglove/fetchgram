@@ -14,9 +14,18 @@ h1 {
   text-shadow: 5px 5px 5px #555753;
 }
 
+h1 > a {
+  color: white;
+  text-decoration: none;
+}
+
 input {
   display: block;
   margin: auto;
+}
+
+a {
+  outline: 0;
 }
 
 /* Flex container */
