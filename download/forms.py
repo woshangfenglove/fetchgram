@@ -23,7 +23,7 @@ class PostForm(ModelForm):
     def clean_post_url(self):
         """Sanitize tracking code and check if the url exists."""
         cleaned_data = super().clean()
-        data = self.cleaned_data.get("post_url")
+        data = cleaned_data.get("post_url")
         sanitized_url = self._remove_utm_code(data)
         url = self._valid_url(sanitized_url)
 
@@ -31,7 +31,7 @@ class PostForm(ModelForm):
 
     def _valid_url(self, url):
         """Make sure it is a working instagram url."""
-        if not bool(url):
+        if url is None:
             raise ValidationError("That's not an instagram post.")
         if not self._url_exists(url.group()):
             raise ValidationError("The page does not exist.")
@@ -48,7 +48,7 @@ class PostForm(ModelForm):
 
     def _remove_utm_code(self, url):
         """Remove tracking code from url."""
-        pattern = "^http[s]*\:\/+www.instagram.com\/[a-z]\/[A-Za-z0-9\W]+\/"
+        pattern = "^http[s]*\:\/+www.instagram.com\/[a-z]\/[A-Za-z0-9_-]+"
         match = re.match(pattern, url)
 
         return match
